@@ -1,3 +1,4 @@
+from cv2 import imshow, waitKey
 import torch
 import numpy as np
 import cv2
@@ -29,7 +30,8 @@ class ObjectDetection:
         """
         play = pafy.new(self._URL).streams[-1]
         assert play is not None
-        return cv2.VideoCapture(play.url)
+        return cv2.VideoCapture(1)
+        # return cv2.VideoCapture(play.url)
 
     def load_model(self):
         """
@@ -95,12 +97,15 @@ class ObjectDetection:
             start_time = time()
             ret, frame = player.read()
             assert ret
+            # frame = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
             results = self.score_frame(frame)
             frame = self.plot_boxes(results, frame)
             end_time = time()
             fps = 1/np.round(end_time - start_time, 3)
             print(f"Frames Per Second : {fps}")
+            cv2.imshow("a", frame)
             out.write(frame)
+            waitKey(1)
 
 # Create a new object and execute.
 a = ObjectDetection("https://www.youtube.com/watch?v=dwD1n7N7EAg")
